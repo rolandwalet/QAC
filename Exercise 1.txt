@@ -1,0 +1,219 @@
+----Exercise 1 – Roland Walet----
+
+--Encapsulation--
+
+Encapsulation is a way of binding the data and any methods that act on that data
+together so they are a single unit. This means that the variables of a class can be
+from any other class hidden (also known as data hiding) and therefore can only be
+accessed through methods in their current class. It allows fields of a class to be
+made read-only or write-only, and lets a class have total control over what is stored
+within its fields.
+
+This is done by applying access modifiers, such as:
+
+	public
+
+This allows any object stated as being public to be called from anywhere.
+It means the object is unrestricted.
+
+	protected
+
+This allows the class to only be called outside the object within the package or
+by subclasses
+
+Having no modifier, by default in Java, restricts access to only the object and
+the package.
+
+Finally, the most restrictive access modifier is:
+
+	private
+
+Which only allows access within the class itself.
+
+--Inheritance--
+Inheritance is the process where a class gains the properties of another. This allows
+information to be made much more manageable. A class that inherits properties of
+another called a subclass, and the class the properties are inherited from is called a
+superclass.
+
+Inheritance makes use of the keyword “extends” to inherit the properties of a class.
+For example:
+
+	public class SuperClass {
+	    …..
+	    …..
+	}
+
+	public class SubClass extends SuperClass{
+	    …..
+	    …..
+	}
+
+This will cause the class “subclass” to gain all features listed in the body of
+the superclass. They can be overridden if necessary, and details can be added to
+increase the complexity of the subclass, but all variables and methods in the superclass
+will be part of the subclass (unless they are set to private).
+
+So:
+
+	public class SuperClass {
+	    public void someMethod() {
+		System.out.println("This is a superclass method")
+	    }
+	}
+
+	public class SubClass extends SuperClass{
+ 	   @Override
+	    public void someMethod(){
+		System.out.println("This is a subclass method")
+	    }
+	}
+
+Here the method someMethod() is inherited by subClass from superClass and overridden to
+return the word subclass instead of superclass.
+
+--Polymorphism--
+Polymorphism is the ability of an object to take on different forms. In Java this is
+where subclasses of a class can define their own behaviours, unique to themselves, but
+still share some of the functionality of their parent class.
+
+For example, let us create a class called Superclass with a method:
+
+	public class SuperClass {
+	    int a
+ 	   int b
+
+	    public Superclass(int input1, int input2){
+	    a = input1;
+ 	   b = input2;
+ 	   }
+
+ 	   public void someMethod() {
+		System.out.println(a + " and " + b)
+	    }
+	}
+
+This creates the superclass, gives it two variables a and b, and a method to print those
+variables.
+
+Then let us create 2 subclasses:
+
+	public class SubClass1 extends SuperClass {
+	    private int c
+
+	    public SubClass1(int input1, int input2, int input3){
+	    a = input1;
+	    b = input2;
+	    c = input3;
+	    }
+
+	    @Override
+	    public void someMethod() {
+		System.out.println(a + ", " + b + " and " + c)
+	    }
+	}
+
+	public class SubClass2 extends SuperClass {
+	    private int d
+
+	    public SubClass1(int input1, int input2, int input4){
+ 	   a = input1;
+	    b = input2;
+	    d = input4;
+	    }
+
+	    @Override
+	    public void someMethod() {
+		System.out.println(a + ", " + b + " and " + d)
+	    }
+	}
+
+This gives us two subclasses that each have an integer of their own. Then let us create
+a main function that allows creates one of each class and shows the Polymorphism:
+
+	public class Main{
+	    public static void main(String[] args) {
+		Superclass super, sub1, sub2;
+
+		super = new SuperClass(1, 2);
+		sub1 = new SubClass1(1, 2, 3);
+		sub2 = new SubClass2(1, 2, 4);
+
+		super.someMethod();
+		sub1.someMethod();
+		sub2.someMethod();
+	    }
+	}
+
+This program shows the polymorphism, as they are referenced as superclasses at the
+start but sub1 and sub2 are given subclass properties further on.
+
+--Abstraction--
+
+Abstraction is the process of hiding implementation complexity, in other words trying
+to minimise the amount of complex code in the 'main interface'. It allows us to call up
+methods without concern for how they work.
+
+For this I will use an example from my Cinema ticket system. Let us create a
+class called Ticket:
+
+	import java.util.Scanner;
+
+	public abstract class Ticket {
+	    int price;
+ 	   int total;
+ 	   int tickets;
+    
+ 	   protected void getTotal() {
+ 	       total += (price*tickets);
+ 	   }
+    
+	    Ticket(){
+	        total = 0;
+	    }
+    
+	    protected static int getInteger(String ticketType){
+	        Scanner scanner = new Scanner(System.in);
+        
+	        int number;
+	        do{
+	            System.out.println("Please enter number of " + ticketType
+                    + " tickets: ");
+	            while (!scanner.hasNextInt()) {
+	                String wrongInput = scanner.next();
+	                System.out.println(wrongInput + " is an invalid input. Please "
+	                        + "try again: ");
+	            }
+	            number = scanner.nextInt();
+        } while  (number < 0);
+	        return number;
+	    }
+	}
+
+This is an abstract class as it will not be called up in the main body of the program.
+
+Next we will create a subclass named StandardTicket:
+
+	package cinema;
+
+	public class StandardTicket extends Ticket {
+	    StandardTicket(int input){
+	        tickets = getInteger("Standard");
+        price = input;
+	    }
+	}
+
+This subclass calls upon the method "getInteger" but without needing to know how the
+method works as it is stored in the body of "Ticket"
+
+This can then be shown again by having a main body like this:
+
+	public class Main {
+	    public static void main(String[] args) {
+	        Ticket standard;
+
+	        standard.getTotal();
+	
+		System.out.println("Total cost is: £" + standard.total);
+
+Where the method getTotal is referenced in the main body.
